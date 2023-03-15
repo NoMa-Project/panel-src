@@ -3,6 +3,7 @@
 @section('content')
 <div class="card" style="width: 30rem;">
     <div class="card-body">
+        <h1>Reset password</h1>
         <form method="POST" action="{{ route('password.store') }}">
             @csrf
         

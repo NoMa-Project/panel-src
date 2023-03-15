@@ -3,6 +3,8 @@
 @section('content')
 <div class="card" style="width: 30rem;">
     <div class="card-body">
+        <h1>Register</h1>
+
         <form method="POST" action="{{ route('register') }}">
             @csrf
         
