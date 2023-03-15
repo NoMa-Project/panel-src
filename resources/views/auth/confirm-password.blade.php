@@ -1,27 +1,42 @@
-<x-guest-layout>
-    <div class="mb-4 text-sm text-gray-600 dark:text-gray-400">
-        {{ __('This is a secure area of the application. Please confirm your password before continuing.') }}
+@extends('layouts.guest')
+
+@section('content')
+<div class="card" style="width: 30rem;">
+    <div class="card-body">
+        <div class="mb-4 text-sm text-gray-600">
+            {{ __('This is a secure area of the application. Please confirm your password before continuing.') }}
+        </div>
+        
+        <form method="POST" action="{{ route('password.confirm') }}">
+            @csrf
+        
+            <!-- Password -->
+            <div class="mb-3">
+                <label for="password" class="form-label">{{ __('Password') }}</label>
+        
+                <input id="password" class="form-control" type="password" name="password" required autocomplete="current-password" />
+        
+                @error('password')
+                    <div class="text-danger mt-2">{{ $message }}</div>
+                @enderror
+            </div>
+        
+            <div class="d-flex justify-content-end mt-4">
+                <button type="submit" class="btn btn-primary">{{ __('Confirm') }}</button>
+            </div>
+        </form>        
     </div>
+ </div>
+@endsection
 
-    <form method="POST" action="{{ route('password.confirm') }}">
-        @csrf
+@push('scripts')
+    
+@endpush
 
-        <!-- Password -->
-        <div>
-            <x-input-label for="password" :value="__('Password')" />
+@push('footer-scripts')
+    
+@endpush
 
-            <x-text-input id="password" class="block mt-1 w-full"
-                            type="password"
-                            name="password"
-                            required autocomplete="current-password" />
-
-            <x-input-error :messages="$errors->get('password')" class="mt-2" />
-        </div>
-
-        <div class="flex justify-end mt-4">
-            <x-primary-button>
-                {{ __('Confirm') }}
-            </x-primary-button>
-        </div>
-    </form>
-</x-guest-layout>
+@push('styles')
+    
+@endpush
