@@ -6,8 +6,10 @@
 apt update -y && apt upgrade -y
 #add-apt-repository -y ppa:ondrej/php
 apt install apache2 ghostscript libapache2-mod-php mysql-server php php-bcmath php-curl php-imagick php-intl php-json php-mbstring php-mysql php-xml php-zip -y
+clear
 
 #get necessary informations from user
+echo "Sitename cannot be wordpress."
 read -p "Entrez le nom de votre site: " sitename
 read -p "Entrez le nom de la base de données: " db_name
 read -p "Entrez le nom d'utilisateur de la base de données: " db_user
@@ -79,6 +81,7 @@ echo "define( 'WP_DEBUG', false );" >> /srv/www/$sitename/wp-config.php
 echo "if ( ! defined( 'ABSPATH' ) ) { define( 'ABSPATH', __DIR__ . '/' ); }" >> /srv/www/$sitename/wp-config.php
 echo "require_once ABSPATH . 'wp-settings.php';" >> /srv/www/$sitename/wp-config.php
 echo "?>" >> /srv/www/$sitename/wp-config.php
+clear
 
 echo "Le site web $sitename.com a été créé avec succès !"
 echo "Enter $myip in your naviguator and follow the steps."
