@@ -1,11 +1,11 @@
 #!/bin/bash
-#this script creates n number of wbsite (wordpress + database + link both)
-#https. self signed certificate
+#this script creates n number of website (wordpress + database + link both + https)
 #param : sitename, db_name, db_user, db_password, localhost (if db is not on localhost)
 
 apt update 
 apt upgrade -y
 apt install apache2 ghostscript libapache2-mod-php mysql-server php php-bcmath php-curl php-imagick php-intl php-json php-mbstring php-mysql php-xml php-zip -y
+data=$(curl -s https://api.wordpress.org/secret-key/1.1/salt/)
 
 sudo ufw allow "Apache Full"
 sudo a2enmod ssl
@@ -92,7 +92,6 @@ echo "define( 'DB_PASSWORD', '$db_password' );" >> /var/www/$sitename/wp-config.
 echo "define( 'DB_HOST', 'localhost' );" >> /var/www/$sitename/wp-config.php
 echo "define( 'DB_CHARSET', 'utf8' );" >> /var/www/$sitename/wp-config.php
 echo "define( 'DB_COLLATE', '' );" >> /var/www/$sitename/wp-config.php
-data=$(curl -s https://api.wordpress.org/secret-key/1.1/salt/)
 echo "$data" >> /var/www/$sitename/wp-config.php
 echo "\$table_prefix = 'wp_';" >> /var/www/$sitename/wp-config.php
 echo "define( 'WP_DEBUG', false );" >> /var/www/$sitename/wp-config.php

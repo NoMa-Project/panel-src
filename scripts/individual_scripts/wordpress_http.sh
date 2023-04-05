@@ -1,5 +1,5 @@
 #!/bin/bash
-#this script creates n number of wbsite (wordpress + database + link both)
+#this script creates n number of website (wordpress + database + link both)
 #param : sitename, db_name, db_user, db_password, localhost (if db is not on localhost)
 
 
