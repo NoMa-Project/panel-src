@@ -23,6 +23,14 @@ read -s -p "Entrez le mot de passe de la base de données: " db_password
 #create ssl key and certificate
 sudo openssl req -x509 -nodes -days 365 -newkey rsa:2048 -keyout /etc/ssl/private/$sitename.key -out /etc/ssl/certs/$sitename.crt
 #enter ip when asked common name or sitename.com
+
+#config apache
+echo "<VirtualHost *:80>" >> /etc/apache2/sites-available/$sitename.conf
+echo "        ServerName $sitename.com" >> /etc/apache2/sites-available/$sitename.conf
+echo "        ServerAlias www.$sitename.com" >> /etc/apache2/sites-available/$sitename.conf
+echo "        Redirect / https://$sitename.com/" >> /etc/apache2/sites-available/$sitename.conf
+echo "</VirtualHost>" >> /etc/apache2/sites-available/$sitename.conf
+
 echo "<VirtualHost *:443>" >> /etc/apache2/sites-available/$sitename.conf
 echo "   ServerName $sitename.com" >> /etc/apache2/sites-available/$sitename.conf
 echo "   DocumentRoot /var/www/$sitename" >> /etc/apache2/sites-available/$sitename.conf
@@ -30,6 +38,16 @@ echo "   DocumentRoot /var/www/$sitename" >> /etc/apache2/sites-available/$siten
 echo "   SSLEngine on" >> /etc/apache2/sites-available/$sitename.conf
 echo "   SSLCertificateFile /etc/ssl/certs/$sitename.crt" >> /etc/apache2/sites-available/$sitename.conf
 echo "   SSLCertificateKeyFile /etc/ssl/private/$sitename.key" >> /etc/apache2/sites-available/$sitename.conf
+
+echo "        Alias /media /var/www/$sitename/media" >> /etc/apache2/sites-available/$sitename.conf
+echo "        <Directory /var/www/$sitename/$projectname>" >> /etc/apache2/sites-available/$sitename.conf
+echo "                <Files wsgi.py>" >> /etc/apache2/sites-available/$sitename.conf
+echo "                        Require all granted" >> /etc/apache2/sites-available/$sitename.conf
+echo "                </Files>" >> /etc/apache2/sites-available/$sitename.conf
+echo "        </Directory>" >> /etc/apache2/sites-available/$sitename.conf
+echo "        WSGIDaemonProcess $projectname python-path=/var/www/$sitename python-home=/var/www/$sitename/django_env" >> /etc/apache2/sites-available/$sitename.conf        
+echo "        WSGIProcessGroup $projectname" >> /etc/apache2/sites-available/$sitename.conf
+echo "        WSGIScriptAlias / /var/www/$sitename/$projectname/wsgi.py" >> /etc/apache2/sites-available/$sitename.conf
 echo "</VirtualHost>" >> /etc/apache2/sites-available/$sitename.conf
 
 #install database
@@ -95,35 +113,10 @@ echo "MEDIA_ROOT=os.path.join(BASE_DIR, 'media/')" >> /var/www/$sitename/$projec
 ./manage.py collectstatic
 deactivate
 
-#config apache django
-echo "<VirtualHost *:80>" >> /etc/apache2/sites-available/$sitename.conf
-echo "        ServerName $sitename.com" >> /etc/apache2/sites-available/$sitename.conf
-echo "        ServerAlias www.$sitename.com" >> /etc/apache2/sites-available/$sitename.conf
-echo "        DocumentRoot /var/www/$sitename/" >> /etc/apache2/sites-available/$sitename.conf
-echo "        ErrorLog \${APACHE_LOG_DIR}/$sitename.com_error.log" >> /etc/apache2/sites-available/$sitename.conf
-echo "        CustomLog \${APACHE_LOG_DIR}/$sitename.com_access.log combined" >> /etc/apache2/sites-available/$sitename.conf
-echo "        Alias /static /var/www/$sitename/static" >> /etc/apache2/sites-available/$sitename.conf
-echo "        <Directory /var/www/$sitename/static>" >> /etc/apache2/sites-available/$sitename.conf
-echo "                Require all granted" >> /etc/apache2/sites-available/$sitename.conf
-echo "        </Directory>" >> /etc/apache2/sites-available/$sitename.conf
-echo "        Alias /media /var/www/$sitename/media" >> /etc/apache2/sites-available/$sitename.conf
-echo "        <Directory /var/www/$sitename/media>" >> /etc/apache2/sites-available/$sitename.conf
-echo "                Require all granted" >> /etc/apache2/sites-available/$sitename.conf
-echo "         </Directory>" >> /etc/apache2/sites-available/$sitename.conf
-echo "        <Directory /var/www/$sitename/$projectname>" >> /etc/apache2/sites-available/$sitename.conf
-echo "                <Files wsgi.py>" >> /etc/apache2/sites-available/$sitename.conf
-echo "                        Require all granted" >> /etc/apache2/sites-available/$sitename.conf
-echo "                </Files>" >> /etc/apache2/sites-available/$sitename.conf
-echo "        </Directory>" >> /etc/apache2/sites-available/$sitename.conf
-echo "        WSGIDaemonProcess $projectname python-path=/var/www/$sitename python-home=/var/www/$sitename/django_env" >> /etc/apache2/sites-available/$sitename.conf        
-echo "        WSGIProcessGroup $projectname" >> /etc/apache2/sites-available/$sitename.conf
-echo "        WSGIScriptAlias / /var/www/$sitename/$projectname/wsgi.py" >> /etc/apache2/sites-available/$sitename.conf
-echo "</VirtualHost>" >> /etc/apache2/sites-available/$sitename.conf
-
 a2dissite 000-default.conf 
 a2ensite $sitename.conf
 systemctl restart apache2
 
 echo "Website $sitename successfully created !"
-echo "Enter http://$sitename.com to connect to your website."
+echo "Enter https://$sitename.com to connect to your website."
 
