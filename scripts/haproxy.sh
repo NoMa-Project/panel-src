@@ -1,3 +1,4 @@
+#!/bin/bash
 #debian 10 / 11
 #install haproxy as load balancer between 2 web servers
 
@@ -20,8 +21,7 @@ echo "backend apache_backend_servers" >> /etc/haproxy/haproxy.cfg
 # Use roundrobin to balance traffic
 echo "        balance            roundrobin" >> /etc/haproxy/haproxy.cfg
 # Define the backend servers
-echo "        server             backend01 $webserver1:80 check
-" >> /etc/haproxy/haproxy.cfg
+echo "        server             backend01 $webserver1:80 check" >> /etc/haproxy/haproxy.cfg
 echo "        server             backend02 $webserver2:80 check" >> /etc/haproxy/haproxy.cfg
 
 systemctl restart haproxy
