@@ -35,18 +35,21 @@ php -r "unlink('composer-setup.php');"
 mv composer.phar /usr/local/bin/composer
 
 #get laravel from github
-git clone https://github.com/MazBazDev/lan-bds.git
-cp -r lan-bds /var/www/$sitename
-rm -rf lan-bds
+git clone https://github.com/MazBazDev/NoMa.git
+cd ./NoMa
+git checkout dashboard
+cd ..
+cp -r NoMa /var/www/$sitename
+rm -rf NoMa
+
 cd /var/www/$sitename
 composer install
 apt install npm -y && npm install -y
 
-
 #config apache
 echo "<VirtualHost *:443>
    ServerName $sitename.com
-   DocumentRoot /var/www/$sitename
+   DocumentRoot /var/www/$sitename/public
    SSLEngine on
    SSLCertificateFile /etc/ssl/certs/$sitename.crt
    SSLCertificateKeyFile /etc/ssl/private/$sitename.key
