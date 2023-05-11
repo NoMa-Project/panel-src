@@ -17,8 +17,12 @@ class Node extends Model
     protected $fillable = [
         'name',
         'ip',
+        'port',
+        'user',
         'pswd',
-        'installed'
+        'installed',
+        'key',
+        "error"
     ];
 
      /**

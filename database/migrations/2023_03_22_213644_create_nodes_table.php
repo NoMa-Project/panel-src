@@ -15,8 +15,10 @@ return new class extends Migration
             $table->id();
             $table->string("name")->nullable(false);
             $table->string("ip")->nullable(false);
+            $table->string("port")->nullable(false);
+            $table->string("user")->nullable(false);
             $table->string("pswd")->nullable(false);
-            $table->boolean("installed")->nullable(false)->default(false);
+            $table->boolean("installed")->default(false);
             $table->timestamps();
         });
     }

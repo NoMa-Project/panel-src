@@ -22,21 +22,21 @@
         Manage
     </div>
 
-    <li class="nav-item {{ str_contains("nodes", url()->current()) ? "active" : "" }}">
-        <a class="nav-link"  href="{{ route('dashboard') }}">
+    <li class="nav-item {{ str_contains(url()->current(), "node") ? "active" : "" }}">
+        <a class="nav-link"  href="{{ route('node.index') }}">
             <i class="fas fa-fw fa-server"></i>
             <span>Nodes</span>
         </a>
     </li>
 
-    <li class="nav-item {{ str_contains("nodes", url()->current()) ? "active" : "" }}">
+    <li class="nav-item {{ str_contains(url()->current(), "site") ? "active" : "" }}">
         <a class="nav-link"  href="{{ route('dashboard') }}">
             <i class="fas fa-fw fa-desktop"></i>
             <span>Sites</span>
         </a>
     </li>
 
-    <li class="nav-item {{ str_contains("nodes", url()->current()) ? "active" : "" }}">
+    <li class="nav-item {{ str_contains(url()->current(), "database") ? "active" : "" }}">
         <a class="nav-link"  href="{{ route('dashboard') }}">
             <i class="fas fa-fw fa-database"></i>
             <span>Databases</span>
