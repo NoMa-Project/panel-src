@@ -1,12 +1,19 @@
 #!/bin/bash
 
-# Récupération des paramètres
-IP=$1
-USER=$2
-PASSWORD=$3
-PORT=$4
-URL=$7
+# Affectation des paramètres à des variables
+ip=$1
+user=$2
+password=$3
+port=$4
+url=$5
 
-sshpass -p "$PASSWORD" ssh -T -p "$PORT" "$USER"@$IP << EOF
-  curl -X POST $url
-EOF
+# Connexion SSH au serveur distant
+sshpass -p $password ssh -p $port $user@$ip echo $password | sudo -u $user -S curl -X POST $url 
+
+# Vérification de la création du dossier
+if [ $? -eq 0 ]
+then
+  echo "Connection to the node made successfully !"
+else
+  echo "Error while binding to node !"
+fi
