@@ -12,11 +12,11 @@
 
             @include('node._form')
 
-            @if ($node->error)                
+            @if ($node->error)         
+                <h6>Last error</h6>
+
                 <div class="card mb-3">
                     <div class="card-body" style="background-color: #f7f7f9;">
-                        <h6>Last error</h6>
-
                         {{ $node->error }}
                     </div>
                 </div>
