@@ -77,6 +77,9 @@ class NodeController extends Controller
      */
     public function update(Request $request, Node $node)
     {
+        $node->installed = false;
+        $node->save();
+        
         $request->validate([
             "name" => "required",
             "ip" => "required",
