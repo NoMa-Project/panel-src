@@ -8,9 +8,9 @@ apt install apache2 libapache2-mod-wsgi-py3 -y
 systemctl start apache2
 systemctl enable apache2
 
-sudo ufw allow "Apache Full"
-sudo a2enmod ssl
-sudo systemctl restart apache2
+ufw allow "Apache Full"
+a2enmod ssl
+systemctl restart apache2
 
 #get necessary informations from user
 echo "Sitename cannot be wordpress."
@@ -21,7 +21,7 @@ read -p "Entrez le nom d'utilisateur de la base de données: " db_user
 read -s -p "Entrez le mot de passe de la base de données: " db_password
 
 #create ssl key and certificate
-sudo openssl req -x509 -nodes -days 365 -newkey rsa:2048 -keyout /etc/ssl/private/$sitename.key -out /etc/ssl/certs/$sitename.crt
+openssl req -x509 -nodes -days 365 -newkey rsa:2048 -keyout /etc/ssl/private/$sitename.key -out /etc/ssl/certs/$sitename.crt
 #enter ip when asked common name or sitename.com
 
 #config apache

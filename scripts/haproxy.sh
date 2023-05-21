@@ -1,8 +1,9 @@
 #!/bin/bash
 #debian 10 / 11
 #install haproxy as load balancer between 2 web servers
+#need to have .crt + .key combined in a .pem file in /etc/ssl/private/
 
-apt update && sudo apt -y upgrade
+apt update && apt -y upgrade
 apt -y install haproxy
 
 read -p "Enter ip address of web server 1: " webserver1
@@ -16,6 +17,11 @@ echo "        bind *:80" >> /etc/haproxy/haproxy.cfg
 echo "        default_backend    apache_backend_servers" >> /etc/haproxy/haproxy.cfg
 # Enable send X-Forwarded-For header
 echo "        option             forwardfor" >> /etc/haproxy/haproxy.cfg
+
+echo "frontend https-in
+    bind *:443 ssl crt /etc/ssl/private/noemieanneg.pem    
+    default_backend apache_backend_servers
+    option forwardfor" >> /etc/haproxy/haproxy.cfg
 
 echo "backend apache_backend_servers" >> /etc/haproxy/haproxy.cfg
 # Use roundrobin to balance traffic

@@ -34,7 +34,7 @@ echo "</VirtualHost>" >> /etc/apache2/sites-available/$sitename.conf
 #download and install wordpress
 wget https://wordpress.org/latest.tar.gz
 tar -xvzf latest.tar.gz
-mv wordpress /var/www/
+mv wordpress /var/www/$sitename
 rm -rf latest.tar.gz
 chown -R www-data:www-data /var/www/wordpress
 cp -r /var/www/wordpress /var/www/$sitename
