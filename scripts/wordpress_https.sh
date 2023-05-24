@@ -47,21 +47,21 @@ sudo systemctl reload apache2
 sudo ufw allow "Apache Full"
 
 #configuration of apache for wordpress
-echo "<VirtualHost *:80>" >> /etc/apache2/sites-available/$sitename.conf
-echo "  ServerName $sitename.com" >> /etc/apache2/sites-available/$sitename.conf
-echo "  ServerAlias www.$sitename.com/" >> /etc/apache2/sites-available/$sitename.conf
-echo "  DocumentRoot /var/www/$sitename/" >> /etc/apache2/sites-available/$sitename.conf
-echo "<Directory /var/www/$sitename>" >> /etc/apache2/sites-available/$sitename.conf
-echo "  Options FollowSymLinks" >> /etc/apache2/sites-available/$sitename.conf
-echo "  AllowOverride Limit Options FileInfo" >> /etc/apache2/sites-available/$sitename.conf
-echo "  DirectoryIndex index.php" >> /etc/apache2/sites-available/$sitename.conf
-echo "  Require all granted" >> /etc/apache2/sites-available/$sitename.conf
-echo "</Directory>" >> /etc/apache2/sites-available/$sitename.conf
-echo "<Directory /var/www/$sitename/wp-content>" >> /etc/apache2/sites-available/$sitename.conf
-echo "  Options FollowSymLinks" >> /etc/apache2/sites-available/$sitename.conf
-echo "  Require all granted" >> /etc/apache2/sites-available/$sitename.conf
-echo "</Directory>" >> /etc/apache2/sites-available/$sitename.conf
-echo "</VirtualHost>" >> /etc/apache2/sites-available/$sitename.conf
+echo "<VirtualHost *:80>
+  ServerName $sitename.com
+  ServerAlias www.$sitename.com/
+  DocumentRoot /var/www/$sitename/
+<Directory /var/www/$sitename>
+  Options FollowSymLinks
+  AllowOverride Limit Options FileInfo
+  DirectoryIndex index.php
+  Require all granted
+</Directory>
+<Directory /var/www/$sitename/wp-content>
+  Options FollowSymLinks
+  Require all granted
+</Directory>
+</VirtualHost>" >> /etc/apache2/sites-available/$sitename.conf
 
 #activate new site
 a2ensite $sitename
@@ -85,19 +85,18 @@ MYSQL_SCRIPT
 echo "<?php" >> /var/www/$sitename/wp-config.php
 
 #configuration of wordpress to use this database
-echo "define( 'DB_NAME', '$db_name' );" >> /var/www/$sitename/wp-config.php
-echo "define( 'DB_USER', '$db_user' );" >> /var/www/$sitename/wp-config.php
-echo "define( 'DB_PASSWORD', '$db_password' );" >> /var/www/$sitename/wp-config.php
+echo "define( 'DB_NAME', '$db_name' );
+define( 'DB_USER', '$db_user' );
+define( 'DB_PASSWORD', '$db_password' );" >> /var/www/$sitename/wp-config.php
 #attention : remplacer localhost par l'ip de la machine qui heberge la db
-echo "define( 'DB_HOST', 'localhost' );" >> /var/www/$sitename/wp-config.php
-echo "define( 'DB_CHARSET', 'utf8' );" >> /var/www/$sitename/wp-config.php
-echo "define( 'DB_COLLATE', '' );" >> /var/www/$sitename/wp-config.php
-echo "$data" >> /var/www/$sitename/wp-config.php
-echo "\$table_prefix = 'wp_';" >> /var/www/$sitename/wp-config.php
-echo "define( 'WP_DEBUG', false );" >> /var/www/$sitename/wp-config.php
-echo "if ( ! defined( 'ABSPATH' ) ) { define( 'ABSPATH', __DIR__ . '/' ); }" >> /var/www/$sitename/wp-config.php
-echo "require_once ABSPATH . 'wp-settings.php';" >> /var/www/$sitename/wp-config.php
-echo "?>" >> /var/www/$sitename/wp-config.php
+echo "define( 'DB_HOST', 'localhost' );
+define( 'DB_CHARSET', 'utf8' );
+define( 'DB_COLLATE', '' );
+$data
+\$table_prefix = 'wp_';
+define( 'WP_DEBUG', false );
+if ( ! defined( 'ABSPATH' ) ) { define( 'ABSPATH', __DIR__ . '/' ); }
+require_once ABSPATH . 'wp-settings.php';
+?>" >> /var/www/$sitename/wp-config.php
 
 echo "Le site web $sitename.com a été créé avec succès !"
-echo "Enter https://$sitename.com in your naviguator and follow the steps."

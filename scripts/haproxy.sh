@@ -6,29 +6,24 @@
 apt update && apt -y upgrade
 apt -y install haproxy
 
-read -p "Enter ip address of web server 1: " webserver1
-read -p "Enter ip address of web server 1: " webserver2
+read -p "Enter IP address of web server 1: " webserver1
+read -p "Enter IP address of web server 2: " webserver2
 
+#apache config
+echo "frontend apache_front
+        bind *:80
+        default_backend    apache_backend_servers
+        option             forwardfor
 
-echo "frontend apache_front" >> /etc/haproxy/haproxy.cfg
-# Frontend listen port - 80
-echo "        bind *:80" >> /etc/haproxy/haproxy.cfg
-# Set the default backend
-echo "        default_backend    apache_backend_servers" >> /etc/haproxy/haproxy.cfg
-# Enable send X-Forwarded-For header
-echo "        option             forwardfor" >> /etc/haproxy/haproxy.cfg
-
-echo "frontend https-in
+frontend https-in
     bind *:443 ssl crt /etc/ssl/private/noemieanneg.pem    
     default_backend apache_backend_servers
-    option forwardfor" >> /etc/haproxy/haproxy.cfg
+    option forwardfor
 
-echo "backend apache_backend_servers" >> /etc/haproxy/haproxy.cfg
-# Use roundrobin to balance traffic
-echo "        balance            roundrobin" >> /etc/haproxy/haproxy.cfg
-# Define the backend servers
-echo "        server             backend01 $webserver1:80 check" >> /etc/haproxy/haproxy.cfg
-echo "        server             backend02 $webserver2:80 check" >> /etc/haproxy/haproxy.cfg
+backend apache_backend_servers
+        balance            roundrobin
+        server             backend01 $webserver1:80 check
+        server             backend02 $webserver2:80 check" >> /etc/haproxy/haproxy.cfg
 
 systemctl restart haproxy
 

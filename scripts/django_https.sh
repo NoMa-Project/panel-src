@@ -25,30 +25,30 @@ openssl req -x509 -nodes -days 365 -newkey rsa:2048 -keyout /etc/ssl/private/$si
 #enter ip when asked common name or sitename.com
 
 #config apache
-echo "<VirtualHost *:80>" >> /etc/apache2/sites-available/$sitename.conf
-echo "        ServerName $sitename.com" >> /etc/apache2/sites-available/$sitename.conf
-echo "        ServerAlias www.$sitename.com" >> /etc/apache2/sites-available/$sitename.conf
-echo "        Redirect / https://$sitename.com/" >> /etc/apache2/sites-available/$sitename.conf
-echo "</VirtualHost>" >> /etc/apache2/sites-available/$sitename.conf
+echo "<VirtualHost *:80>
+        ServerName $sitename.com
+        ServerAlias www.$sitename.com
+        Redirect / https://$sitename.com/
+</VirtualHost>
 
-echo "<VirtualHost *:443>" >> /etc/apache2/sites-available/$sitename.conf
-echo "   ServerName $sitename.com" >> /etc/apache2/sites-available/$sitename.conf
-echo "   DocumentRoot /var/www/$sitename" >> /etc/apache2/sites-available/$sitename.conf
+<VirtualHost *:443>
+   ServerName $sitename.com
+   DocumentRoot /var/www/$sitename
 
-echo "   SSLEngine on" >> /etc/apache2/sites-available/$sitename.conf
-echo "   SSLCertificateFile /etc/ssl/certs/$sitename.crt" >> /etc/apache2/sites-available/$sitename.conf
-echo "   SSLCertificateKeyFile /etc/ssl/private/$sitename.key" >> /etc/apache2/sites-available/$sitename.conf
+   SSLEngine on
+   SSLCertificateFile /etc/ssl/certs/$sitename.crt
+   SSLCertificateKeyFile /etc/ssl/private/$sitename.key
 
-echo "        Alias /media /var/www/$sitename/media" >> /etc/apache2/sites-available/$sitename.conf
-echo "        <Directory /var/www/$sitename/$projectname>" >> /etc/apache2/sites-available/$sitename.conf
-echo "                <Files wsgi.py>" >> /etc/apache2/sites-available/$sitename.conf
-echo "                        Require all granted" >> /etc/apache2/sites-available/$sitename.conf
-echo "                </Files>" >> /etc/apache2/sites-available/$sitename.conf
-echo "        </Directory>" >> /etc/apache2/sites-available/$sitename.conf
-echo "        WSGIDaemonProcess $projectname python-path=/var/www/$sitename python-home=/var/www/$sitename/django_env" >> /etc/apache2/sites-available/$sitename.conf        
-echo "        WSGIProcessGroup $projectname" >> /etc/apache2/sites-available/$sitename.conf
-echo "        WSGIScriptAlias / /var/www/$sitename/$projectname/wsgi.py" >> /etc/apache2/sites-available/$sitename.conf
-echo "</VirtualHost>" >> /etc/apache2/sites-available/$sitename.conf
+        Alias /media /var/www/$sitename/media
+        <Directory /var/www/$sitename/$projectname>
+                <Files wsgi.py>
+                        Require all granted
+                </Files>
+        </Directory>
+        WSGIDaemonProcess $projectname python-path=/var/www/$sitename python-home=/var/www/$sitename/django_env        
+        WSGIProcessGroup $projectname
+        WSGIScriptAlias / /var/www/$sitename/$projectname/wsgi.py
+</VirtualHost>" >> /etc/apache2/sites-available/$sitename.conf
 
 #install database
 apt install mysql-server libmysqlclient-dev -y
@@ -83,22 +83,22 @@ sed -i '/^ALLOWED_HOSTS/d' /var/www/$sitename/$projectname/settings.py
 echo "ALLOWED_HOSTS = ['127.0.0.1', '$myip', '$sitename.com']" >> /var/www/$sitename/$projectname/settings.py
 
 sed -i '/^DATABASES = {/,/^}/d' /var/www/$sitename/$projectname/settings.py
-echo "DATABASES = {" >> /var/www/$sitename/$projectname/settings.py
-echo "    'default': {" >> /var/www/$sitename/$projectname/settings.py
-echo "  'ENGINE': 'django.db.backends.mysql'," >> /var/www/$sitename/$projectname/settings.py
-echo "  'NAME': '$db_name'," >> /var/www/$sitename/$projectname/settings.py
-echo "  'USER': '$db_user'," >> /var/www/$sitename/$projectname/settings.py
-echo "  'PASSWORD': '$db_password'," >> /var/www/$sitename/$projectname/settings.py
-echo "  'HOST': '127.0.0.1'," >> /var/www/$sitename/$projectname/settings.py
-echo "  'PORT' : '3306'," >> /var/www/$sitename/$projectname/settings.py
-echo "  }" >> /var/www/$sitename/$projectname/settings.py
-echo "}" >> /var/www/$sitename/$projectname/settings.py
+echo "DATABASES = {
+    'default': {
+  'ENGINE': 'django.db.backends.mysql',
+  'NAME': '$db_name',
+  'USER': '$db_user',
+  'PASSWORD': '$db_password',
+  'HOST': '127.0.0.1',
+  'PORT' : '3306',
+  }
+}
 
-echo "import os" >> /var/www/$sitename/$projectname/settings.py
-echo "STATIC_URL='/static/'" >> /var/www/$sitename/$projectname/settings.py
-echo "STATIC_ROOT=os.path.join(BASE_DIR, 'static/')" >> /var/www/$sitename/$projectname/settings.py
-echo "MEDIA_URL='/media/'" >> /var/www/$sitename/$projectname/settings.py
-echo "MEDIA_ROOT=os.path.join(BASE_DIR, 'media/')" >> /var/www/$sitename/$projectname/settings.py
+import os
+STATIC_URL='/static/'
+STATIC_ROOT=os.path.join(BASE_DIR, 'static/')
+MEDIA_URL='/media/'
+MEDIA_ROOT=os.path.join(BASE_DIR, 'media/')" >> /var/www/$sitename/$projectname/settings.py
 
 #migrate the initial db schema to our mysql db
 ./manage.py makemigrations
