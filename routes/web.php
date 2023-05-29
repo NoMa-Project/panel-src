@@ -2,6 +2,7 @@
 
 use App\Http\Controllers\NodeController;
 use App\Http\Controllers\ProfileController;
+use App\Http\Controllers\SitesController;
 use Illuminate\Support\Facades\Route;
 
 /*
@@ -25,6 +26,7 @@ Route::middleware(['auth', 'verified'])->group(function () {
     })->name("dashboard");
 
     Route::resource("node", NodeController::class);
+    Route::resource("sites", SitesController::class);
 });
 
 

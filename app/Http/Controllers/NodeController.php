@@ -117,7 +117,7 @@ class NodeController extends Controller
      */
     private function sendHeartbeat(Node $node) {
         $url = route('heartbeat', [$node->id, $node->key]);
-        $node->error = date("d/m/y H:i:s") . " -> " . shell_exec("../scripts/heartbeat.sh '{$node->ip}' '{$node->user}' '{$node->paswd}' '{$node->port}' '{$url}' 2>&1");
+        $node->error = date("d/m/y H:i:s") . " -> " . shell_exec("../scripts/heartbeat.sh '{$node->ip}' 'mazbaz' 'mazbaz' '{$node->port}' '{$url}' 2>&1");
         $node->save();
     }
 }
