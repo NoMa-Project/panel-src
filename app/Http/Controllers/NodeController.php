@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use Spatie\Ssh\Ssh;
 use App\Models\Node;
 use Illuminate\Http\Request;
 
@@ -112,12 +113,15 @@ class NodeController extends Controller
     }
 
 
+
     /**
      * Send hearth beat to he specified resource.
      */
     private function sendHeartbeat(Node $node) {
         $url = route('heartbeat', [$node->id, $node->key]);
-        $node->error = date("d/m/y H:i:s") . " -> " . shell_exec("../scripts/heartbeat.sh '{$node->ip}' 'mazbaz' 'mazbaz' '{$node->port}' '{$url}' 2>&1");
+        $node->error = Ssh::create('mazbaz', $node->ip)->usePrivateKey(asset("testhey"))->execute('curl -X POST ' . $url);
+
+        //$node->error = date("d/m/y H:i:s") . " -> " . shell_exec("../scripts/heartbeat.sh '{$node->ip}' 'mazbaz' 'mazbaz' '{$node->port}' '{$url}' 2>&1");
         $node->save();
     }
 }

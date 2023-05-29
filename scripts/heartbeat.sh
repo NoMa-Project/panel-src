@@ -8,7 +8,8 @@ port=$4
 url=$5
 
 # Connexion SSH au serveur distant
-sshpass -p $password ssh -p $port $user@$ip echo $password | sudo -u $user -S curl -X POST $url 
+echo "mazbaz" | sudo sshpass -p $password ssh -p $port $user@$ip echo $password | sudo -u $user -S curl -X POST $url 
+#echo "mazbaz" | sudo sshpass -p $password ssh -p $port $user@$ip echo $password | sudo -u $user -S curl -X POST $url 
 
 # Vérification de la création du dossier
 if [ $? -eq 0 ]
