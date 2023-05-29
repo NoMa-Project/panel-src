@@ -119,8 +119,8 @@ class NodeController extends Controller
      */
     private function sendHeartbeat(Node $node) {
         $url = route('heartbeat', [$node->id, $node->key]);
-        $node->error = Ssh::create('mazbaz', $node->ip)->usePrivateKey(asset("testhey"))->execute('curl -X POST ' . $url);
-
+        dd(Ssh::create('mazbaz', $node->ip)->usePrivateKey(asset("testhey"))->execute('curl -X POST ' . $url));
+        $node->error = "";
         //$node->error = date("d/m/y H:i:s") . " -> " . shell_exec("../scripts/heartbeat.sh '{$node->ip}' 'mazbaz' 'mazbaz' '{$node->port}' '{$url}' 2>&1");
         $node->save();
     }
