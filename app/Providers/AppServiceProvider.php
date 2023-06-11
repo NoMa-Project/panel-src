@@ -25,7 +25,7 @@ class AppServiceProvider extends ServiceProvider
 
         $this->app->booted(function () {
             $this->app->make(Schedule::class)
-                ->command('update:nodes')
+                ->command('nodes:update')
                 ->everyMinute();
         });
     }

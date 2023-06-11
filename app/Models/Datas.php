@@ -4,9 +4,8 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
-use Illuminate\Database\Eloquent\Relations\BelongsToMany;
 
-class Node extends Model
+class Datas extends Model
 {
     use HasFactory;
 
@@ -16,25 +15,22 @@ class Node extends Model
      * @var array<int, string>
      */
     protected $fillable = [
-        'name',
-        'ip',
-        'installed',
-        'token',
-        "uptime",
-        "error"
+        'maxCpu',
+        'cpuUsage',
+        'maxRam',
+        'ramUsage',
     ];
 
-     /**
+    /**
      * The attributes that should be cast to native types.
      *
      * @var array
      */
     protected $casts = [
-        'installed' => 'boolean',
+        'maxCpu' => "integer",
+        'cpuUsage' => "float",
+        'maxRam' => "integer",
+        'ramUsage' => "float",
     ];
-
-    public function datas(): BelongsToMany
-    {
-        return $this->belongsToMany(Datas::class);
-    }
 }
+

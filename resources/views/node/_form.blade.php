@@ -22,36 +22,6 @@
                     @enderror
                 </div>
             </div>
-            <div class="col-md-6">
-                <div class="mb-3">
-                    <label for="port" class="form-label">SSH Port</label>
-                    <input type="number" min="0" class="form-control" name="port" id="port" placeholder="22" value="{{ old("port", $node->port ?? "" ) }}">
-
-                    @error("port")
-                        <span class="text-danger">{{ $message }}</span>
-                    @enderror
-                </div>
-            </div>
-        </div>
-    </div>
-    <div class="col-md-6">
-        <div class="mb-3">
-            <label for="user" class="form-label">SSH User</label>
-            <input type="text" class="form-control" name="user" id="user" placeholder="root" value="{{ old("user", $node->user ?? "" ) }}">
-            
-            @error("user")
-                <span class="text-danger">{{ $message }}</span>
-            @enderror
-        </div>
-    </div>
-    <div class="col-md-6">
-        <div class="mb-3">
-            <label for="password" class="form-label">SSH Passwword</label>
-            <input type="password" class="form-control" name="password" id="password" placeholder="" value="{{ old("password", $node->pswd ?? "" ) }}">
-
-            @error("password")
-                <span class="text-danger">{{ $message }}</span>
-            @enderror
         </div>
     </div>
 </div>

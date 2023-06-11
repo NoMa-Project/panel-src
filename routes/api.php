@@ -1,6 +1,7 @@
 <?php
 
 use App\Http\Controllers\InstallController;
+use App\Http\Controllers\NodeController;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 
@@ -19,4 +20,4 @@ Route::middleware('auth:sanctum')->get('/user', function (Request $request) {
     return $request->user();
 });
 
-Route::post("/heartbeat/{node}/{key}", [InstallController::class, "heartbeat"])->name("heartbeat");
+Route::get("node-datas/{node}", [NodeController::class, "api"])->name("api-node-data");

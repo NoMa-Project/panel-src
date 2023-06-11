@@ -11,14 +11,13 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::create('sites', function (Blueprint $table) {
+        Schema::create('datas', function (Blueprint $table) {
             $table->id();
-            $table->text("name");
-            $table->longText("desc")->nullable();
-            $table->integer("type");
-            $table->boolean("ssl");
-            $table->text("fqnd");
-            $table->longText("error");
+            $table->integer("maxCpu");
+            $table->float("cpuUsage");
+
+            $table->integer("maxRam");
+            $table->float("ramUsage");
             $table->timestamps();
         });
     }
@@ -28,6 +27,6 @@ return new class extends Migration
      */
     public function down(): void
     {
-        Schema::dropIfExists('sites');
+        Schema::dropIfExists('datas');
     }
 };

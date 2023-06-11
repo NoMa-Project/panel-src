@@ -2,7 +2,7 @@
 
 use App\Http\Controllers\NodeController;
 use App\Http\Controllers\ProfileController;
-use App\Http\Controllers\SitesController;
+use App\Models\Node;
 use Illuminate\Support\Facades\Route;
 
 /*
@@ -22,11 +22,12 @@ Route::get('/', function () {
 
 Route::middleware(['auth', 'verified'])->group(function () {
     Route::get('/dashboard', function () {
-        return view('dashboard');
+        return view('dashboard', [
+            "nodes" => Node::all()->count()
+        ]);
     })->name("dashboard");
 
     Route::resource("node", NodeController::class);
-    Route::resource("sites", SitesController::class);
 });
 
 

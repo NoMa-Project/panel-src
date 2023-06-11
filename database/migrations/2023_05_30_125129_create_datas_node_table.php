@@ -11,8 +11,10 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::table('nodes', function (Blueprint $table) {
-            $table->longText("error")->nullable(true);
+        Schema::create('datas_node', function (Blueprint $table) {
+            $table->id();
+            $table->integer("datas_id");
+            $table->integer("node_id");
         });
     }
 
@@ -21,8 +23,6 @@ return new class extends Migration
      */
     public function down(): void
     {
-        Schema::table('nodes', function (Blueprint $table) {
-            //
-        });
+        Schema::dropIfExists('datas_nodes');
     }
 };

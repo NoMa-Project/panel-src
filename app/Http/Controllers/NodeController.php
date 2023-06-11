@@ -2,9 +2,10 @@
 
 namespace App\Http\Controllers;
 
-use Spatie\Ssh\Ssh;
+use Exception;
 use App\Models\Node;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Http;
 
 class NodeController extends Controller
 {
@@ -34,21 +35,16 @@ class NodeController extends Controller
         $request->validate([
             "name" => "required",
             "ip" => "required",
-            "port" => "required",
-            "user" => "required",
-            "password" => "required",
         ]);
 
         $node = Node::create([
             "name" => $request->input("name"),
             "ip" => $request->input("ip"),
-            "port" => $request->input("port"),
-            "user" => $request->input("user"),
-            "pswd" => $request->input("password"),
-            "key" => bin2hex(random_bytes(16)),
+            "token" => bin2hex(random_bytes(16)),
         ]);
 
-        $this->sendHeartbeat($node);
+        $node->error = $this->sendHeartbeat($node);
+        $node->save;
 
         return redirect()->route("node.index")->with("success", "Node created");
     }
@@ -84,20 +80,15 @@ class NodeController extends Controller
         $request->validate([
             "name" => "required",
             "ip" => "required",
-            "port" => "required",
-            "user" => "required",
-            "password" => "required",
         ]);
 
         $node->update([
             "name" => $request->input("name"),
             "ip" => $request->input("ip"),
-            "port" => $request->input("port"),
-            "user" => $request->input("user"),
-            "pswd" => $request->input("password"),
+            "error" => $this->sendHeartbeat($node)
         ]);
 
-        $this->sendHeartbeat($node);
+        
         
         return redirect()->route("node.index")->with("success", "Node updated !");
     }
@@ -117,12 +108,32 @@ class NodeController extends Controller
     /**
      * Send hearth beat to he specified resource.
      */
-    private function sendHeartbeat(Node $node) {
-        $url = route('heartbeat', [$node->id, $node->key]);
-        $test = Ssh::create('mazbaz', $node->ip)->usePrivateKey(storage_path('keys/testkeys'))->execute('cat hello > /var/test.mazbaz')->enableOutput();
-        dd($test->getOutput());
-        $node->error = "";
+    private function sendHeartbeat(Node $node): string {
+        try {
+            $response = Http::post('http://' . $node->ip . ':3000/heartbeat', [
+                'token' => $node->token,
+            ]);
+    
+            if ($response->successful()) {
+                $responseData = $response->json();
+                if ($responseData['token'] === $node->token) {
+                    $node->installed = true;
+                    $node->save();
+    
+                    return date("d/m/y H:i:s") . " Node connected!";
+                }
+            }
+    
+            return date("d/m/y H:i:s") . " Error during binding the node!";
+        } catch (Exception $e) {
+            return date("d/m/y H:i:s") . " Error during binding the node! can't ping it";
+        }
+    }
 
-        $node->save();
+    public function api(Node $node)
+    {
+        $datas = $node->datas()->get();
+
+        return response()->json($datas);
     }
 }
